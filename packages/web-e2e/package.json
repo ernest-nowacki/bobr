@@ -1,0 +1,14 @@
+{
+  "name": "@repo/web-e2e",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "e2e:test": "echo \"test web\""
+  },
+  "dependencies": {
+    "@playwright/test": "1.56.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "web": "workspace:*"
+  }
+}
