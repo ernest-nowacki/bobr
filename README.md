@@ -1,135 +1,101 @@
-# Turborepo starter
+# Turborepo Build/Test Optimization Demo
 
-This Turborepo starter is maintained by the Turborepo core team.
+This repository demonstrates advanced build and test caching optimizations using Turborepo and Next.js with Turbopack. The goal is to achieve **deterministic builds** and **intelligent test caching** that respects tree-shaking and only invalidates tests when the actual build output changes.
 
-## Using this example
+## Purpose
 
-Run the following command:
+This project tests whether we can optimize Turborepo caching to:
 
-```sh
-npx create-turbo@latest
+1. Avoid unnecessary rebuilds when changes in shared packages don't affect consuming apps
+2. Reuse test cache when build outputs remain identical (even if builds ran)
+3. Leverage tree-shaking to ensure unused code doesn't affect build artifacts
+
+## Architecture
+
+- **Apps**: `apps/web` and `apps/docs` (Next.js applications)
+- **Shared Package**: `packages/ui` (`@repo/ui`) - shared UI components and utilities
+- **E2E Tests**: `packages/web-e2e` and `packages/docs-e2e` - test packages that depend on build outputs
+
+### Current Usage Pattern
+
+- `apps/web` imports `sub` from `@repo/ui/utils`
+- `apps/docs` imports `add` from `@repo/ui/utils`
+- Both apps import from the **barrel file** `@repo/ui/utils/index.ts` which exports both `add` and `sub`
+
+## How It Works
+
+### Tree-Shaking with Barrel Files
+
+The optimization leverages Next.js `optimizePackageImports` and package-level `sideEffects: false` to enable aggressive tree-shaking:
+
+1. **Barrel File Exports**: `packages/ui/src/utils/index.ts` exports both `add` and `sub`
+2. **Selective Imports**: Each app only imports what it uses (`web` → `sub`, `docs` → `add`)
+3. **Tree-Shaking**: Next.js/Turbopack removes unused exports from the final bundle
+4. **Result**: Changing `add.ts` only affects `docs` build output, not `web` build output
+
+### Smart Test Caching
+
+The `scripts/hash-build.ts` script calculates content hashes of build outputs (`.next` directories) and writes them to `build.hash` files. The `e2e:test` task uses these hashes as inputs instead of depending on `^build`:
+
+- If build output changes → hash changes → `build.hash` updates → e2e test cache invalidates
+- If build output is identical → hash unchanged → `build.hash` unchanged → e2e test cache hits
+
+## Testing
+
+### Basic Test: Cache Verification
+
+Run the e2e tests twice in a row:
+
+```bash
+bun e2e:test
+bun e2e:test
 ```
 
-## What's inside?
+**Expected Result**:
 
-This Turborepo includes the following packages/apps:
+- **First run**: All builds and tests run (4 tasks total)
+- **Second run**: All tasks use cache (4 cached results)
 
-### Apps and Packages
+### Advanced Test: Selective Invalidation
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+Modify the `add` method in `packages/ui/src/utils/add.ts`:
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```bash
+# Edit packages/ui/src/utils/add.ts (change the implementation)
+bun e2e:test
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+**Expected Result**:
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+1. **Builds**: Both `web` and `docs` rebuild (cache miss - correct, as Turborepo tracks dependency changes)
+2. **Build Outputs**:
+   - `docs` build output changes (uses `add`)
+   - `web` build output remains identical (doesn't use `add`, tree-shaking removes it)
+3. **E2E Tests**:
+   - `docs-e2e` runs fresh (its `build.hash` changed)
+   - `web-e2e` uses cache (its `build.hash` unchanged)
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+This demonstrates that even though both apps rebuild, only the app that actually uses the changed code has its test cache invalidated.
 
-### Develop
+## How Barrel Files Work
 
-To develop all apps and packages, run the following command:
+Barrel files (`index.ts`) re-export multiple modules from a single entry point. With proper tree-shaking:
 
-```
-cd my-turborepo
+- **Without tree-shaking**: Importing `{ sub }` from `@repo/ui/utils` would bundle both `add` and `sub`
+- **With tree-shaking**: Only `sub` is included in the bundle, `add` is eliminated
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+The key configuration enabling this:
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+1. **Package config** (`packages/ui/package.json`): `"sideEffects": false`
+2. **Next.js config**: `optimizePackageImports: ["@repo/ui"]`
+3. **Build tool**: Turbopack (`--turbo` flag) for production builds
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## Scripts
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+- `bun e2e:test` - Runs builds, syncs build hashes, then runs e2e tests
+- `bun build` - Builds all apps and packages
+- `bun dev` - Starts development servers
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+## Technical Details
 
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+See `OPTIMIZATION_PLAN.md` for the detailed implementation plan and rationale.
