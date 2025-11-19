@@ -5,6 +5,7 @@
   "private": true,
   "exports": {
     "./*": "./src/*.tsx",
+    "./utils": "./src/utils/index.ts",
     "./utils/*": "./src/utils/*.ts"
   },
   "scripts": {

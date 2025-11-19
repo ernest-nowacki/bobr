@@ -1,3 +1,3 @@
 export const sub = (a: number) => {
-  return a - 1;
+  return a - 2;
 };
