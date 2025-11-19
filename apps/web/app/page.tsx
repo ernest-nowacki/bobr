@@ -1,6 +1,7 @@
 import Image, { type ImageProps } from "next/image";
 import { Button } from "@repo/ui/button";
 import styles from "./page.module.css";
+import { sub } from "@repo/ui/utils/sub";
 
 type Props = Omit<ImageProps, "src"> & {
   srcLight: string;
@@ -19,6 +20,7 @@ const ThemeImage = (props: Props) => {
 };
 
 export default function Home() {
+  const result = sub(10);
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -32,10 +34,7 @@ export default function Home() {
           priority
         />
         <ol>
-          <li>
-            Get started by editing <code>apps/web/app/page.tsx</code>
-          </li>
-          <li>Save and see your changes instantly.</li>
+          <li>The result of the sub is: {result}.</li>
         </ol>
 
         <div className={styles.ctas}>
