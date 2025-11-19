@@ -1,3 +1,3 @@
 export const add = (a: number) => {
-  return a + 7;
+  return a + 8;
 };
