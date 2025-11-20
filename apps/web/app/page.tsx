@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { add } from "@repo/ui/utils";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Calculator, Zap, Box, GitBranch } from "lucide-react";
+import { Calculator, Database, Box, Scissors, Target } from "lucide-react";
 
 const BeaverMascot = ({
   focusValue,
@@ -321,7 +321,7 @@ export default function Home() {
         <div className="grid grid-cols-3 gap-8 md:gap-16 text-sm text-zinc-500 mt-4 border-t border-white/5 pt-8">
           <div className="flex flex-col items-center gap-2 text-center group cursor-default">
             <div className="p-2 rounded-full bg-white/5 group-hover:bg-white/10 transition-colors text-[#375BD2]">
-              <Zap className="w-5 h-5" />
+              <Database className="w-5 h-5" />
             </div>
             <span className="font-medium text-zinc-400 group-hover:text-zinc-200 transition-colors">
               Proper Cache
@@ -329,7 +329,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col items-center gap-2 text-center group cursor-default">
             <div className="p-2 rounded-full bg-white/5 group-hover:bg-white/10 transition-colors text-blue-400">
-              <GitBranch className="w-5 h-5" />
+              <Scissors className="w-5 h-5" />
             </div>
             <span className="font-medium text-zinc-400 group-hover:text-zinc-200 transition-colors">
               Tree shaking
@@ -337,7 +337,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col items-center gap-2 text-center group cursor-default">
             <div className="p-2 rounded-full bg-white/5 group-hover:bg-white/10 transition-colors text-green-400">
-              <Box className="w-5 h-5" />
+              <Target className="w-5 h-5" />
             </div>
             <span className="font-medium text-zinc-400 group-hover:text-zinc-200 transition-colors">
               No useless runs
