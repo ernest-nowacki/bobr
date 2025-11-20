@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Zap } from "lucide-react";
+import { toast, Toaster } from "sonner";
 
 const FullDinoMascot = () => {
   return (
@@ -124,8 +125,26 @@ const FullDinoMascot = () => {
 };
 
 export default function DemoPage() {
+  const callApi = async () => {
+    try {
+      const res = await fetch("/api/hello");
+      const text = await res.text();
+      toast(text, {
+        icon: <Zap className="w-4 h-4 text-emerald-500" />,
+        style: {
+          background: "#0a1f15",
+          border: "1px solid rgba(16,185,129,0.2)",
+          color: "white",
+        },
+      });
+    } catch {
+      toast.error("Failed to call API");
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-[#050f0a] text-white items-center justify-center relative overflow-hidden">
+      <Toaster />
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-emerald-600/10 rounded-full blur-[120px]" />
@@ -149,17 +168,31 @@ export default function DemoPage() {
           </motion.div>
         </motion.div>
 
-        <div className="text-center space-y-8">
-          <Link href="/">
+        <div className="text-center space-y-4 flex flex-col items-center">
+          <h1 className="text-4xl font-bold text-white">Docuzaurs Demo</h1>
+
+          <div className="flex gap-4">
+            <Link href="/">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-2 px-6 py-3 bg-zinc-800 text-white rounded-full font-semibold shadow-lg hover:bg-zinc-700 transition-all border border-white/10"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Back to Home
+              </motion.button>
+            </Link>
+
             <motion.button
+              onClick={callApi}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white rounded-full font-semibold shadow-lg shadow-emerald-600/30 hover:shadow-emerald-600/50 transition-all"
             >
-              <ArrowLeft className="w-5 h-5" />
-              Back to Home
+              <Zap className="w-5 h-5" />
+              Call API
             </motion.button>
-          </Link>
+          </div>
         </div>
       </main>
     </div>
