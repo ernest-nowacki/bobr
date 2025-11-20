@@ -34,9 +34,9 @@ We calculate a recursive SHA-256 hash of the `.next` directory, with the followi
 ### 2. What we Ignore (The "Noise")
 *   **`BUILD_ID`**: A unique string generated for every build.
 *   **`server/pages/`** and **`server/app/`**:
-    *   These directories contain entry points (like `page.js`). In Next.js (especially with Turbopack), these are often thin wrappers/manifests that reference chunks.
-    *   They can be volatile or contain absolute paths/references that change across builds even if logic doesn't.
-    *   *Safety Check*: Since these files delegate to `server/chunks`, any logic change will be captured by the chunk hash.
+    *   These directories contain entry points (like `page.js`). In Next.js (especially with Turbopack), these files are merely **thin wrappers** that import the actual code from `server/chunks/`.
+    *   We skip them because they often contain volatile internal references (like absolute paths or changing IDs) that create false positives (hash changes without logic changes).
+    *   *Safety Check*: We **DO** hash `server/chunks/`. Since the entry points simply delegate to the chunks, any actual server-side code change results in new chunk files, which triggers a hash update.
 *   **`*.json` (Manifests)**:
     *   Files like `build-manifest.json`, `prerender-manifest.json`.
     *   These contain mapping data that can change order or include the volatile `BUILD_ID`.
