@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowLeft, Zap } from "lucide-react";
 import { toast, Toaster } from "sonner";
+import { Code } from "@repo/ui/code";
 
 const FullBeaverMascot = () => {
   return (
@@ -219,7 +220,7 @@ export default function DemoPage() {
           color: "white",
         },
       });
-    } catch (e) {
+    } catch {
       toast.error("Failed to call API");
     }
   };
@@ -273,6 +274,13 @@ export default function DemoPage() {
               <Zap className="w-5 h-5" />
               Call API
             </motion.button>
+          </div>
+
+          <div className="mt-8 p-4 bg-black/40 rounded-xl border border-white/10 backdrop-blur-sm">
+            <p className="text-zinc-400 mb-2 text-sm">Shared UI Component:</p>
+            <Code className="bg-[#1a1d26] px-4 py-2 rounded-lg text-[#375BD2] font-mono">
+              console.log("Hello from Bóbr!");
+            </Code>
           </div>
         </div>
       </main>
