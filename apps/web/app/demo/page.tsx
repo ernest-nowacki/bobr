@@ -261,7 +261,7 @@ export default function DemoPage() {
                 className="flex items-center gap-2 px-6 py-3 bg-zinc-800 text-white rounded-full font-semibold shadow-lg hover:bg-zinc-700 transition-all border border-white/10"
               >
                 <ArrowLeft className="w-5 h-5" />
-                Back to Home
+                Back to Home lol
               </motion.button>
             </Link>
 
