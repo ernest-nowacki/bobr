@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { sub } from "@repo/ui/utils";
 import { useState, useEffect } from "react";
-import { Calculator, FileText, Shield, Scale, ArrowLeft } from "lucide-react";
+import { Calculator, Zap, Shield, Scale, ArrowLeft } from "lucide-react";
 
 const DinoMascot = ({
   focusValue,
@@ -60,9 +60,7 @@ const DinoMascot = ({
             r="5"
             fill="black"
             animate={
-              isIdle
-                ? { scaleY: [1, 0.1, 1, 1, 0.1, 1] }
-                : { scaleY: 1 }
+              isIdle ? { scaleY: [1, 0.1, 1, 1, 0.1, 1] } : { scaleY: 1 }
             }
             transition={{
               duration: 4,
@@ -128,14 +126,14 @@ export default function Home() {
           </h1>
           <div className="space-y-2">
             <p className="text-xl md:text-2xl font-light text-zinc-300">
-              Documentation with a prehistoric bite.
+              Eating prehistoric setups for lunch.
             </p>
             <p className="text-zinc-400 text-sm md:text-base max-w-md mx-auto leading-relaxed">
-              Roaring fast static pages with{" "}
+              Roaring fast CI with{" "}
               <span className="text-emerald-500 font-medium">
                 monstrous performance
               </span>{" "}
-              and ancient wisdom preserved forever.
+              thanks to tree shaking and build caching.
             </p>
           </div>
         </motion.div>
@@ -212,9 +210,9 @@ export default function Home() {
           href="http://localhost:3000"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="group relative px-8 py-4 bg-white text-[#050f0a] rounded-full font-bold transition-all shadow-[0_0_40px_-10px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_-15px_rgba(16,185,129,0.4)] overflow-hidden border border-white/10 cursor-pointer"
+          className="group relative px-8 py-4 bg-emerald-500 text-white rounded-full font-bold transition-all shadow-[0_0_40px_-10px_rgba(16,185,129,0.4)] hover:shadow-[0_0_60px_-15px_rgba(16,185,129,0.6)] overflow-hidden border border-white/10 cursor-pointer"
         >
-          <div className="absolute inset-0 bg-linear-to-r from-transparent via-emerald-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+          <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
           <span className="relative flex items-center gap-3">
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             Back to Bóbr
@@ -225,10 +223,10 @@ export default function Home() {
         <div className="grid grid-cols-3 gap-8 md:gap-16 text-sm text-zinc-500 mt-4 border-t border-white/5 pt-8">
           <div className="flex flex-col items-center gap-2 text-center group cursor-default">
             <div className="p-2 rounded-full bg-white/5 group-hover:bg-white/10 transition-colors text-emerald-500">
-              <FileText className="w-5 h-5" />
+              <Zap className="w-5 h-5" />
             </div>
             <span className="font-medium text-zinc-400 group-hover:text-zinc-200 transition-colors">
-              Ancient Logs
+              Iterate faster
             </span>
           </div>
           <div className="flex flex-col items-center gap-2 text-center group cursor-default">
@@ -236,16 +234,15 @@ export default function Home() {
               <Shield className="w-5 h-5" />
             </div>
             <span className="font-medium text-zinc-400 group-hover:text-zinc-200 transition-colors">
-              Dino Tough
+              Save time
             </span>
           </div>
           <div className="flex flex-col items-center gap-2 text-center group cursor-default">
             <div className="p-2 rounded-full bg-white/5 group-hover:bg-white/10 transition-colors text-green-400">
-              <Scale className="w-3 h-3" />
-              <span>Logic Scale</span>
+              <Scale className="w-5 h-5" />
             </div>
             <span className="font-medium text-zinc-400 group-hover:text-zinc-200 transition-colors">
-              Subtracts 2
+              Balanced runs
             </span>
           </div>
         </div>
