@@ -9,6 +9,17 @@ Standard Turborepo caching relies on input hashing. If any dependency (e.g., `pa
 ## The Solution
 We decouple the test cache from the build input cache. Instead of depending on the `build` task, the `e2e:test` task depends on a calculated **content hash** of the build directory (`.next`).
 
+This hash is written to a `build.hash` file in each E2E package directory (e.g., `packages/web-e2e/build.hash`). Turborepo is configured to use this file as an input for the `e2e:test` task.
+
+```json
+// turbo.json
+"e2e:test": {
+  "inputs": ["src/**", "package.json", "build.hash"]
+}
+```
+
+If the application build output hasn't functionally changed (matching `build.hash`) AND the test code hasn't changed, Turborepo will skip the test run and restore the previous result from cache.
+
 ## Hashing Rules
 
 We calculate a recursive SHA-256 hash of the `.next` directory, with the following specific **inclusions** and **exclusions**:
@@ -43,4 +54,3 @@ The logic is implemented in `scripts/hash-build.ts` and executed via the root `e
 ```bash
 turbo run build && bun scripts/hash-build.ts && turbo run e2e:test
 ```
-
