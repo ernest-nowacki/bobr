@@ -306,15 +306,13 @@ export default function Home() {
         {/* Single Action Button */}
         <motion.a
           href="http://localhost:3001"
-          target="_blank"
-          rel="noopener noreferrer"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className="group relative px-8 py-4 bg-[#375BD2] text-white rounded-full font-bold transition-all shadow-[0_0_40px_-10px_rgba(55,91,210,0.4)] hover:shadow-[0_0_60px_-15px_rgba(55,91,210,0.6)] overflow-hidden border border-white/10"
         >
           <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
           <span className="relative flex items-center gap-3">
-            Docs
+            See Docuzaurs
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </span>
         </motion.a>
