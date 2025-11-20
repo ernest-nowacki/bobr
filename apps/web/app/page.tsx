@@ -303,19 +303,33 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* Single Action Button */}
-        <motion.a
-          href="http://localhost:3001"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="group relative px-8 py-4 bg-[#375BD2] text-white rounded-full font-bold transition-all shadow-[0_0_40px_-10px_rgba(55,91,210,0.4)] hover:shadow-[0_0_60px_-15px_rgba(55,91,210,0.6)] overflow-hidden border border-white/10"
-        >
-          <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
-          <span className="relative flex items-center gap-3">
-            See Docuzaurs
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </span>
-        </motion.a>
+        {/* Action Buttons */}
+        <div className="flex gap-6">
+          <motion.a
+            href="http://localhost:3001"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="group relative px-8 py-4 bg-[#375BD2] text-white rounded-full font-bold transition-all shadow-[0_0_40px_-10px_rgba(55,91,210,0.4)] hover:shadow-[0_0_60px_-15px_rgba(55,91,210,0.6)] overflow-hidden border border-white/10"
+          >
+            <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+            <span className="relative flex items-center gap-3">
+              See Docuzaurs
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </span>
+          </motion.a>
+
+          <motion.a
+            href="/demo"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="group relative px-8 py-4 bg-zinc-800 text-white rounded-full font-bold transition-all shadow-[0_0_40px_-10px_rgba(255,255,255,0.1)] hover:bg-zinc-700 overflow-hidden border border-white/10"
+          >
+            <span className="relative flex items-center gap-3">
+              View Demo
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </span>
+          </motion.a>
+        </div>
 
         {/* Footer-ish text */}
         <div className="grid grid-cols-3 gap-8 md:gap-16 text-sm text-zinc-500 mt-4 border-t border-white/5 pt-8">

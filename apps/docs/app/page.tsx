@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { sub } from "@repo/ui/utils";
 import { useState, useEffect } from "react";
-import { Calculator, Zap, Shield, Scale, ArrowLeft } from "lucide-react";
+import { Calculator, Zap, Shield, Scale } from "lucide-react";
 
 const DinoMascot = ({
   focusValue,
@@ -93,6 +93,7 @@ export default function Home() {
   useEffect(() => {
     const idleTimer = setInterval(() => {
       if (Date.now() - lastInteraction > 3000) {
+        // 3 seconds of inactivity
         setIsIdle(true);
       }
     }, 1000);
@@ -205,19 +206,33 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* Action Button - Back to Main */}
-        <motion.a
-          href="http://localhost:3000"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="group relative px-8 py-4 bg-emerald-500 text-white rounded-full font-bold transition-all shadow-[0_0_40px_-10px_rgba(16,185,129,0.4)] hover:shadow-[0_0_60px_-15px_rgba(16,185,129,0.6)] overflow-hidden border border-white/10 cursor-pointer"
-        >
-          <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
-          <span className="relative flex items-center gap-3">
-            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            Back to Bóbr
-          </span>
-        </motion.a>
+        {/* Action Buttons */}
+        <div className="flex gap-6">
+          <motion.a
+            href="http://localhost:3000"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="group relative px-8 py-4 bg-emerald-500 text-white rounded-full font-bold transition-all shadow-[0_0_40px_-10px_rgba(16,185,129,0.4)] hover:shadow-[0_0_60px_-15px_rgba(16,185,129,0.6)] overflow-hidden border border-white/10 cursor-pointer"
+          >
+            <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+            <span className="relative flex items-center gap-3">
+              See Bóbr
+              <ArrowRight className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            </span>
+          </motion.a>
+
+          <motion.a
+            href="/demo"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="group relative px-8 py-4 bg-zinc-800 text-white rounded-full font-bold transition-all shadow-[0_0_40px_-10px_rgba(255,255,255,0.1)] hover:bg-zinc-700 overflow-hidden border border-white/10"
+          >
+            <span className="relative flex items-center gap-3">
+              View Demo
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </span>
+          </motion.a>
+        </div>
 
         {/* Footer-ish text */}
         <div className="grid grid-cols-3 gap-8 md:gap-16 text-sm text-zinc-500 mt-4 border-t border-white/5 pt-8">
@@ -248,5 +263,25 @@ export default function Home() {
         </div>
       </main>
     </div>
+  );
+}
+
+function ArrowRight(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
+    </svg>
   );
 }
