@@ -5,7 +5,8 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": ["NEXT_PUBLIC_*"]
     },
     "e2e:test": {
       "dependsOn": [],
@@ -21,6 +22,5 @@
       "cache": false,
       "persistent": true
     }
-  },
-  "env": ["NEXT_PUBLIC_*"]
+  }
 }
