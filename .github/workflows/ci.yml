@@ -17,6 +17,8 @@ jobs:
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+      NEXT_PUBLIC_BOBR_WEB_URL: http://localhost:3000
+      NEXT_PUBLIC_BOBR_DOCS_URL: http://localhost:3001
 
     steps:
       - name: Checkout

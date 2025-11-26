@@ -9,14 +9,14 @@ export default defineConfig({
   reporter: [["html", { open: "never" }], ["list"]],
   maxFailures: process.env.CI ? 1 : 0,
   use: {
-    baseURL: "http://localhost:3001",
+    baseURL: process.env.NEXT_PUBLIC_BOBR_DOCS_URL || "http://localhost:3001",
     trace: "on-first-retry",
   },
   webServer: {
     command: process.env.CI
-      ? "cd ../../apps/docs && bun run start"
-      : "cd ../../apps/docs && bun run dev",
-    url: "http://localhost:3001",
+      ? "cd ../../apps/docs && bun run start -- -p 3001"
+      : "cd ../../apps/docs && bun run dev -- -p 3001",
+    url: process.env.NEXT_PUBLIC_BOBR_DOCS_URL || "http://localhost:3001",
     reuseExistingServer: !process.env.CI,
     stdout: "ignore",
     stderr: "pipe",

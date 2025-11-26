@@ -209,7 +209,9 @@ export default function Home() {
         {/* Action Buttons */}
         <div className="flex gap-6">
           <motion.a
-            href="http://localhost:3000"
+            href={
+              process.env.NEXT_PUBLIC_BOBR_WEB_URL || "http://localhost:3000"
+            }
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className="group relative px-8 py-4 bg-emerald-500 text-white rounded-full font-bold transition-all shadow-[0_0_40px_-10px_rgba(16,185,129,0.4)] hover:shadow-[0_0_60px_-15px_rgba(16,185,129,0.6)] overflow-hidden border border-white/10 cursor-pointer"
