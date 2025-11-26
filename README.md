@@ -99,4 +99,4 @@ The key configuration enabling this:
 ## Technical Details
 
 See `spec/OPTIMIZATION_PLAN.md` for the detailed implementation plan and rationale.
-See `spec/HASHING_STRATEGY.md` for the hashing strategy used to calculate the build hash..
+See `spec/HASHING_STRATEGY.md` for the hashing strategy used to calculate the build hash.
