@@ -24,7 +24,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2.0.2
@@ -38,5 +38,12 @@ jobs:
         run: bunx playwright install --with-deps
 
       - name: Run E2E Tests
-        # This runs the smart test runner: build -> hash-check -> test
-        run: bun run e2e:test
+        # This runs the smart test runner: build -> hash-check -> test (affected only)
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            export TURBO_BASE="origin/${{ github.base_ref }}"
+          else
+            export TURBO_BASE="HEAD^1"
+          fi
+          echo "Using TURBO_BASE=$TURBO_BASE"
+          bun run ci:affected

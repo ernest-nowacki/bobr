@@ -6,6 +6,7 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "e2e:test": "turbo run build --output-logs=new-only && bun scripts/hash-build.ts && turbo run e2e:test",
+    "ci:affected": "bun scripts/ci-affected.ts",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
   },
