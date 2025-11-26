@@ -13,7 +13,7 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'cd ../../apps/web && bun run dev',
+    command: process.env.CI ? 'cd ../../apps/web && bun run start' : 'cd ../../apps/web && bun run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     stdout: 'ignore',
