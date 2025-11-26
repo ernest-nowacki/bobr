@@ -1,7 +1,11 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
-  "globalPassThroughEnv": ["VERCEL_DEPLOYMENT_ID"],
+  "globalPassThroughEnv": [
+    "VERCEL_DEPLOYMENT_ID",
+    "VERCEL_URL",
+    "VERCEL_BRANCH_URL"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
