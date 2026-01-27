@@ -2,7 +2,10 @@
   "name": "@repo/web-e2e",
   "targets": {
     "e2e:test": {
-      "command": "playwright test",
+      "command": "pnpm exec playwright test",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
       "inputs": [
         "{projectRoot}/src/**",
         "{projectRoot}/build.hash",

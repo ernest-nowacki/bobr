@@ -1,10 +1,10 @@
-# Turborepo Build/Test Optimization Demo
+# Nx Build/Test Optimization Demo
 
-This repository demonstrates advanced build and test caching optimizations using Turborepo and Next.js with Turbopack. The goal is to achieve **deterministic builds** and **intelligent test caching** that respects tree-shaking and only invalidates tests when the actual build output changes.
+This repository demonstrates advanced build and test caching optimizations using Nx and Next.js with Turbopack. The goal is to achieve **deterministic builds** and **intelligent test caching** that respects tree-shaking and only invalidates tests when the actual build output changes.
 
 ## Purpose
 
-This project tests whether we can optimize Turborepo caching to:
+This project tests whether we can optimize Nx caching to:
 
 1. Avoid unnecessary rebuilds when changes in shared packages don't affect consuming apps
 2. Reuse test cache when build outputs remain identical (even if builds ran)
@@ -47,8 +47,8 @@ The `scripts/hash-build.ts` script calculates content hashes of build outputs (`
 Run the e2e tests twice in a row:
 
 ```bash
-bun e2e:test
-bun e2e:test
+pnpm run e2e:test
+pnpm run e2e:test
 ```
 
 **Expected Result**:
@@ -62,12 +62,12 @@ Modify the `add` method in `packages/ui/src/utils/add.ts`:
 
 ```bash
 # Edit packages/ui/src/utils/add.ts (change the implementation)
-bun e2e:test
+pnpm run e2e:test
 ```
 
 **Expected Result**:
 
-1. **Builds**: Both `web` and `docs` rebuild (cache miss - correct, as Turborepo tracks dependency changes)
+1. **Builds**: Both `web` and `docs` rebuild (cache miss - correct, as Nx tracks dependency changes)
 2. **Build Outputs**:
    - `docs` build output changes (uses `add`)
    - `web` build output remains identical (doesn't use `add`, tree-shaking removes it)
@@ -92,11 +92,27 @@ The key configuration enabling this:
 
 ## Scripts
 
-- `bun e2e:test` - Runs builds, syncs build hashes, then runs e2e tests
-- `bun build` - Builds all apps and packages
-- `bun dev` - Starts development servers
+- `pnpm run e2e:test` - Runs builds, syncs build hashes, then runs e2e tests
+- `pnpm run build` - Builds all apps and packages
+- `pnpm run dev` - Starts development servers
+- `pnpm run lint` - Lints all packages
+- `pnpm run check-types` - Type checks all packages
+- `pnpm run ci:affected` - Runs the smart CI workflow (build + hash + test affected only)
+
+## Nx Commands
+
+```bash
+# View project graph
+pnpm nx graph
+
+# Run affected builds
+pnpm nx affected -t build --base=main
+
+# Show affected projects
+pnpm nx show projects --affected --base=main
+```
 
 ## Technical Details
 
 See `spec/OPTIMIZATION_PLAN.md` for the detailed implementation plan and rationale.
-See `spec/HASHING_STRATEGY.md` for the hashing strategy used to calculate the build hash..
+See `spec/HASHING_STRATEGY.md` for the hashing strategy used to calculate the build hash.

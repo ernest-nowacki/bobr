@@ -1,5 +1,6 @@
 {
   "$schema": "https://nx.dev/reference/nx-json",
+  "tui": false,
   "namedInputs": {
     "default": ["{projectRoot}/**/*"],
     "production": ["default", "!{projectRoot}/**/*.md"],
