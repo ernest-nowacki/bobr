@@ -1,0 +1,44 @@
+{
+  "$schema": "https://nx.dev/reference/nx-json",
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*"],
+    "production": ["default", "!{projectRoot}/**/*.md"],
+    "sharedGlobals": ["{workspaceRoot}/.env*"]
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["production", "sharedGlobals"],
+      "outputs": ["{projectRoot}/.next"],
+      "cache": true
+    },
+    "lint": {
+      "dependsOn": ["^lint"],
+      "cache": true
+    },
+    "check-types": {
+      "dependsOn": ["^check-types"],
+      "cache": true
+    },
+    "e2e:test": {
+      "dependsOn": [],
+      "inputs": [
+        "{projectRoot}/src/**/*",
+        "{projectRoot}/package.json",
+        "{projectRoot}/build.hash"
+      ],
+      "cache": true
+    },
+    "dev": {
+      "cache": false
+    }
+  },
+  "plugins": [
+    {
+      "plugin": "@nx/next/plugin",
+      "options": { "buildTargetName": "build", "devTargetName": "dev" }
+    },
+    { "plugin": "@nx/eslint/plugin", "options": { "targetName": "lint" } }
+  ],
+  "defaultBase": "main"
+}

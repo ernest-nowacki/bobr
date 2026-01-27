@@ -20,6 +20,10 @@ test-results/
 # Turbo
 .turbo
 
+# Nx
+.nx/cache
+.nx/workspace-data
+
 # Vercel
 .vercel
 

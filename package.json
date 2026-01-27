@@ -2,27 +2,23 @@
   "name": "turbo-2",
   "private": true,
   "scripts": {
-    "build": "turbo run build --output-logs=new-only",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "e2e:test": "turbo run build --output-logs=new-only && bun scripts/hash-build.ts && turbo run e2e:test",
-    "ci:affected": "bun scripts/ci-affected.ts",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "build": "nx run-many -t build",
+    "dev": "nx run-many -t dev",
+    "lint": "nx run-many -t lint",
+    "check-types": "nx run-many -t check-types",
+    "e2e:test": "nx run-many -t build && tsx scripts/hash-build.ts && nx run-many -t e2e:test",
+    "ci:affected": "tsx scripts/ci-affected.ts",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@nx/eslint": "21.1.2",
+    "@nx/js": "21.1.2",
+    "@nx/next": "21.1.2",
+    "@types/node": "24.10.3",
+    "nx": "21.1.2",
     "prettier": "3.7.4",
-    "turbo": "2.6.3",
-    "typescript": "5.9.3",
-    "@types/bun": "1.3.4",
-    "@types/node": "24.10.3"
+    "tsx": "4.19.4",
+    "typescript": "5.9.3"
   },
-  "engines": {
-    "bun": ">=1.3.4"
-  },
-  "packageManager": "bun@1.3.4",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+  "packageManager": "pnpm@9.15.4"
 }
