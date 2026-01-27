@@ -9,7 +9,7 @@
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["production", "sharedGlobals"],
+      "inputs": ["production", "^production", "sharedGlobals"],
       "outputs": ["{projectRoot}/.next"],
       "cache": true
     },

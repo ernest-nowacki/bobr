@@ -6,7 +6,7 @@
     "dev": "nx run-many -t dev",
     "lint": "nx run-many -t lint",
     "check-types": "nx run-many -t check-types",
-    "e2e:test": "nx run-many -t build && tsx scripts/hash-build.ts && nx run-many -t e2e:test",
+    "e2e:test": "nx run-many -t build --output-style=stream && tsx scripts/hash-build.ts && nx run-many -t e2e:test --output-style=stream",
     "ci:affected": "tsx scripts/ci-affected.ts",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
