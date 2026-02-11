@@ -33,8 +33,17 @@ jobs:
           node-version: 22
           cache: "pnpm"
 
-      - name: Derive SHAs for Nx
-        uses: nrwl/nx-set-shas@v4
+      - name: Set NX SHAs (pull request)
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "NX_BASE=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_ENV"
+          echo "NX_HEAD=${{ github.event.pull_request.head.sha }}" >> "$GITHUB_ENV"
+
+      - name: Set NX SHAs (push)
+        if: github.event_name == 'push'
+        run: |
+          echo "NX_BASE=${{ github.event.before }}" >> "$GITHUB_ENV"
+          echo "NX_HEAD=${{ github.sha }}" >> "$GITHUB_ENV"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -47,6 +56,9 @@ jobs:
 
       - name: Sync build hashes
         run: pnpm exec tsx scripts/hash-build.ts
+
+      - name: Debug affected e2e projects
+        run: pnpm exec nx show projects --affected --base="$NX_BASE" --head="$NX_HEAD"
 
       - name: Run affected E2E tests
         run: pnpm exec nx affected -t e2e:test --base="$NX_BASE" --head="$NX_HEAD" --output-style=stream
