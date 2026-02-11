@@ -1,4 +1,3 @@
 export async function GET() {
-  return new Response("hello web");
+  return new Response("hello webo");
 }
-
