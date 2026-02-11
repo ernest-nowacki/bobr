@@ -26,19 +26,19 @@ console.log("=================================================================")
 try {
   // 1. Build Affected Packages
   console.log("\nStep 1: Building affected packages...");
-  execSync(`npx nx affected -t build --base=${BASE}`, { stdio: "inherit" });
+  execSync(`pnpm exec nx affected -t build --base=${BASE}`, { stdio: "inherit" });
 
   // 2. Calculate Build Hashes
   // Runs a custom script that hashes the build outputs (.next folders).
   // This is used by the e2e:test task to decide if it can skip execution based on
   // whether the actual build artifact changed (not just the source code).
   console.log("\nStep 2: Calculating build hashes...");
-  execSync("npx tsx scripts/hash-build.ts", { stdio: "inherit" });
+  execSync("pnpm exec tsx scripts/hash-build.ts", { stdio: "inherit" });
 
   // 3. Run E2E Tests
   // Uses the same filter to ensuring we only run tests that are related to the changes.
   console.log("\nStep 3: Running E2E tests for affected apps...");
-  execSync(`npx nx affected -t e2e:test --base=${BASE}`, { stdio: "inherit" });
+  execSync(`pnpm exec nx affected -t e2e:test --base=${BASE}`, { stdio: "inherit" });
 
   console.log("\nCI Workflow completed successfully!");
 } catch (error) {

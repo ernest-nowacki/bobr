@@ -42,5 +42,11 @@ jobs:
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
 
-      - name: Run E2E Tests
-        run: pnpm run ci:affected
+      - name: Build affected projects
+        run: pnpm exec nx affected -t build --base="$NX_BASE" --head="$NX_HEAD" --output-style=stream
+
+      - name: Sync build hashes
+        run: pnpm exec tsx scripts/hash-build.ts
+
+      - name: Run affected E2E tests
+        run: pnpm exec nx affected -t e2e:test --base="$NX_BASE" --head="$NX_HEAD" --output-style=stream
