@@ -45,6 +45,9 @@ async function getDirectoryHash(dir: string): Promise<string> {
         relPath.endsWith(".json") ||
         relPath.startsWith("server/pages/") || 
         relPath.startsWith("server/app/") ||
+        // Webpack emits volatile per-build manifests under static/<buildId>/.
+        // Exclude them for deterministic build hashing across rebuilds.
+        /^static\/[^/]+\/_(build|ssg)Manifest\.js$/.test(relPath) ||
         (buildId && relPath.startsWith(`static/${buildId}`)) ||
         relPath.includes(".next/static") // Kept as fallback, though likely incorrect usage
       ) {

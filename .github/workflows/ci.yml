@@ -15,35 +15,50 @@ jobs:
       run:
         working-directory: .
     env:
-      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
       NEXT_PUBLIC_BOBR_WEB_URL: http://localhost:3000
       NEXT_PUBLIC_BOBR_DOCS_URL: http://localhost:3001
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2.0.2
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Set NX SHAs (pull request)
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "NX_BASE=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_ENV"
+          echo "NX_HEAD=${{ github.event.pull_request.head.sha }}" >> "$GITHUB_ENV"
+
+      - name: Set NX SHAs (push)
+        if: github.event_name == 'push'
+        run: |
+          echo "NX_BASE=${{ github.event.before }}" >> "$GITHUB_ENV"
+          echo "NX_HEAD=${{ github.sha }}" >> "$GITHUB_ENV"
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Install Playwright Browsers
-        run: bunx playwright install --with-deps
+        run: pnpm --filter @repo/web-e2e exec playwright install --with-deps
 
-      - name: Run E2E Tests
-        # This runs the smart test runner: build -> hash-check -> test (affected only)
-        run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            export TURBO_BASE="origin/${{ github.base_ref }}"
-          else
-            export TURBO_BASE="HEAD^1"
-          fi
-          echo "Using TURBO_BASE=$TURBO_BASE"
-          bun run ci:affected
+      - name: Build affected projects
+        run: pnpm exec nx affected -t build --base="$NX_BASE" --head="$NX_HEAD" --output-style=stream
+
+      - name: Sync build hashes
+        run: pnpm exec tsx scripts/hash-build.ts
+
+      - name: Debug affected e2e projects
+        run: pnpm exec nx show projects --affected --base="$NX_BASE" --head="$NX_HEAD"
+
+      - name: Run affected E2E tests
+        run: pnpm exec nx affected -t e2e:test --base="$NX_BASE" --head="$NX_HEAD" --output-style=stream

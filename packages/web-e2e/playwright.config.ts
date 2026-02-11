@@ -14,8 +14,8 @@ export default defineConfig({
   },
   webServer: {
     command: process.env.CI
-      ? "cd ../../apps/web && bun run start -- -p 3000"
-      : "cd ../../apps/web && bun run dev -- -p 3000",
+      ? "cd ../../apps/web && pnpm run start --port 3000"
+      : "cd ../../apps/web && pnpm run dev",
     url: process.env.NEXT_PUBLIC_BOBR_WEB_URL || "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     stdout: "ignore",
